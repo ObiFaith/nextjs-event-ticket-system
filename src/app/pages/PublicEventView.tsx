@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
+import { useEvent } from "../hook/useEvent";
 import { Badge } from "../components/ui/badge";
 import { useApp } from "../context/AppContext";
 import { Button } from "../components/ui/button";
@@ -18,7 +19,8 @@ import {
 export const PublicEventView = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { getEventById, getTicketTypesByEvent, addToCart } = useApp();
+  const { getEventById } = useEvent();
+  const { getTicketTypesByEvent, addToCart } = useApp();
   const event = getEventById(eventId!);
   const ticketTypes = getTicketTypesByEvent(eventId!);
 
@@ -26,15 +28,12 @@ export const PublicEventView = () => {
 
   if (!event) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold mb-2">Event not found</h1>
-            <Button onClick={() => navigate("/dashboard")}>
-              Back to Dashboard
-            </Button>
-          </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold mb-2">Event not found</h1>
+          <Button onClick={() => navigate("/dashboard")}>
+            Back to Dashboard
+          </Button>
         </div>
       </div>
     );
@@ -85,152 +84,144 @@ export const PublicEventView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
-      <Navbar />
-
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <Card className="shadow-lg mb-8">
-            <CardHeader className="space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className="bg-primary text-primary-foreground">
-                    {event.status}
-                  </Badge>
-                </div>
-                <h1 className="text-4xl font-semibold mb-4">{event.title}</h1>
-                <div className="flex flex-col gap-3 text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    <span>
-                      {format(event.startDate, "EEEE, MMMM d, yyyy")} at{" "}
-                      {format(event.startDate, "h:mm a")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    <span>
-                      Ends {format(event.endDate, "EEEE, MMMM d, yyyy")} at{" "}
-                      {format(event.endDate, "h:mm a")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <h3 className="font-semibold">About this event</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {event.description}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="space-y-6">
+    <main className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <Card className="shadow-lg mb-8">
+          <CardHeader className="space-y-4">
             <div>
-              <h2 className="text-2xl font-semibold mb-4">Select Tickets</h2>
-              {ticketTypes.length === 0 ? (
-                <Card className="shadow-sm">
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <Ticket className="w-12 h-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">
-                      No tickets available yet
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  {ticketTypes.map(ticket => {
-                    const { available, reason } = isTicketAvailable(ticket);
-                    const availableCount =
-                      ticket.totalQuantity - ticket.reservedQuantity;
-                    const quantity = quantities[ticket.id] || 0;
+              <div className="flex items-center gap-2 mb-2">
+                <Badge className="bg-primary text-primary-foreground">
+                  {event.status}
+                </Badge>
+              </div>
+              <h1 className="text-4xl font-semibold mb-4">{event.title}</h1>
+              <div className="flex flex-col gap-3 text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>
+                    {format(event.startsAt, "EEEE, MMMM d, yyyy")} at{" "}
+                    {format(event.startsAt, "h:mm a")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>
+                    Ends {format(event.endsAt, "EEEE, MMMM d, yyyy")} at{" "}
+                    {format(event.endsAt, "h:mm a")}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <h3 className="font-semibold">About this event</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {event.description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
-                    return (
-                      <Card
-                        key={ticket.id}
-                        className="shadow-sm hover:shadow-md transition-shadow"
-                      >
-                        <CardHeader>
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <CardTitle className="mb-2">
-                                {ticket.name}
-                              </CardTitle>
-                              <CardDescription>
-                                {available ? (
-                                  <>
-                                    <span className="text-accent font-medium">
-                                      {availableCount} tickets left
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span className="text-destructive font-medium">
-                                    {reason}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Select Tickets</h2>
+            {ticketTypes.length === 0 ? (
+              <Card className="shadow-sm">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Ticket className="w-12 h-12 text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">
+                    No tickets available yet
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {ticketTypes.map(ticket => {
+                  const { available, reason } = isTicketAvailable(ticket);
+                  const availableCount =
+                    ticket.totalQuantity - ticket.reservedQuantity;
+                  const quantity = quantities[ticket.id] || 0;
+
+                  return (
+                    <Card
+                      key={ticket.id}
+                      className="shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <CardHeader>
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <CardTitle className="mb-2">
+                              {ticket.name}
+                            </CardTitle>
+                            <CardDescription>
+                              {available ? (
+                                <>
+                                  <span className="text-accent font-medium">
+                                    {availableCount} tickets left
                                   </span>
-                                )}
-                              </CardDescription>
-                            </div>
-                            {!available && (
-                              <Badge
-                                variant="secondary"
-                                className="bg-muted text-muted-foreground"
-                              >
-                                {reason}
-                              </Badge>
-                            )}
+                                </>
+                              ) : (
+                                <span className="text-destructive font-medium">
+                                  {reason}
+                                </span>
+                              )}
+                            </CardDescription>
                           </div>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  handleQuantityChange(ticket.id, -1)
-                                }
-                                disabled={!available || quantity === 0}
-                              >
-                                <Minus className="w-4 h-4" />
-                              </Button>
-                              <span className="w-12 text-center font-medium">
-                                {quantity}
-                              </span>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  handleQuantityChange(ticket.id, 1)
-                                }
-                                disabled={
-                                  !available || quantity >= availableCount
-                                }
-                              >
-                                <Plus className="w-4 h-4" />
-                              </Button>
-                            </div>
-                            <Button
-                              onClick={() => handleAddToCart(ticket)}
-                              disabled={!available || quantity === 0}
-                              className="flex-1"
+                          {!available && (
+                            <Badge
+                              variant="secondary"
+                              className="bg-muted text-muted-foreground"
                             >
-                              Add to Cart
+                              {reason}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() =>
+                                handleQuantityChange(ticket.id, -1)
+                              }
+                              disabled={!available || quantity === 0}
+                            >
+                              <Minus className="w-4 h-4" />
+                            </Button>
+                            <span className="w-12 text-center font-medium">
+                              {quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleQuantityChange(ticket.id, 1)}
+                              disabled={
+                                !available || quantity >= availableCount
+                              }
+                            >
+                              <Plus className="w-4 h-4" />
                             </Button>
                           </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+                          <Button
+                            onClick={() => handleAddToCart(ticket)}
+                            disabled={!available || quantity === 0}
+                            className="flex-1"
+                          >
+                            Add to Cart
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
-      </main>
-
-      <MobileBottomNav />
-    </div>
+      </div>
+    </main>
   );
 };

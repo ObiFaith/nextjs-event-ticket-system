@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { User } from "../context/type";
 import { AuthContext } from "../context";
+import { useMemo, useState } from "react";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -27,9 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = useMemo(() => ({ user, login, signup, logout }), [user]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

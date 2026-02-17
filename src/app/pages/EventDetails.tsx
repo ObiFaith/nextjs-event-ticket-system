@@ -1,13 +1,13 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
+import { useEvent } from "../hook/useEvent";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useApp } from "../context/AppContext";
 import { Button } from "../components/ui/button";
 import { Calendar, Edit, Trash2 } from "lucide-react";
-import { Navigation } from "../components/Navigation";
 import { useNavigate, useParams } from "react-router";
 import {
   Tabs,
@@ -46,22 +46,17 @@ import {
 export const EventDetails = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const {
-    getEventById,
-    cancelEvent,
-    getTicketTypesByEvent,
-    addTicketType,
-    deleteTicketType,
-  } = useApp();
+  const { getEventById, cancelEvent } = useEvent();
+  const { getTicketTypesByEvent, addTicketType, deleteTicketType } = useApp();
   const event = getEventById(eventId!);
   const ticketTypes = getTicketTypesByEvent(eventId!);
 
   const [isAddTicketOpen, setIsAddTicketOpen] = useState(false);
   const [ticketName, setTicketName] = useState("");
   const [totalQuantity, setTotalQuantity] = useState("");
-  const [saleStartDate, setSaleStartDate] = useState("");
+  const [saleStartsAt, setSaleStartsAt] = useState("");
   const [saleStartTime, setSaleStartTime] = useState("");
-  const [saleEndDate, setSaleEndDate] = useState("");
+  const [saleEndsAt, setsaleEndsAt] = useState("");
   const [saleEndTime, setSaleEndTime] = useState("");
 
   if (!event) {
@@ -87,17 +82,17 @@ export const EventDetails = () => {
     if (
       !ticketName ||
       !totalQuantity ||
-      !saleStartDate ||
+      !saleStartsAt ||
       !saleStartTime ||
-      !saleEndDate ||
+      !saleEndsAt ||
       !saleEndTime
     ) {
       toast.error("Please fill in all fields");
       return;
     }
 
-    const start = new Date(`${saleStartDate}T${saleStartTime}`);
-    const end = new Date(`${saleEndDate}T${saleEndTime}`);
+    const start = new Date(`${saleStartsAt}T${saleStartTime}`);
+    const end = new Date(`${saleEndsAt}T${saleEndTime}`);
 
     if (end <= start) {
       toast.error("End date must be after start date");
@@ -108,17 +103,17 @@ export const EventDetails = () => {
       eventId: eventId!,
       name: ticketName,
       totalQuantity: parseInt(totalQuantity),
-      saleStartDate: start,
-      saleEndDate: end,
+      saleStartsAt: start,
+      saleEndsAt: end,
     });
 
     toast.success("Ticket type added successfully!");
     setIsAddTicketOpen(false);
     setTicketName("");
     setTotalQuantity("");
-    setSaleStartDate("");
+    setSaleStartsAt("");
     setSaleStartTime("");
-    setSaleEndDate("");
+    setsaleEndsAt("");
     setSaleEndTime("");
   };
 
@@ -129,11 +124,11 @@ export const EventDetails = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Active":
+      case "ACTIVE":
         return "bg-accent text-accent-foreground";
-      case "Cancelled":
+      case "CANCELLED":
         return "bg-destructive text-destructive-foreground";
-      case "Ended":
+      case "ENDED":
         return "bg-muted text-muted-foreground";
       default:
         return "bg-secondary text-secondary-foreground";
@@ -142,8 +137,8 @@ export const EventDetails = () => {
 
   const getTicketStatus = (ticket: any) => {
     const now = new Date();
-    if (now < ticket.saleStartDate) return "Not Started";
-    if (now > ticket.saleEndDate) return "Sale Ended";
+    if (now < ticket.saleStartsAt) return "Not Started";
+    if (now > ticket.saleEndsAt) return "Sale Ended";
     return "On Sale";
   };
 
@@ -177,12 +172,12 @@ export const EventDetails = () => {
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="w-4 h-4" />
               <span>
-                {format(event.startDate, "MMM d, yyyy h:mm a")} -{" "}
-                {format(event.endDate, "MMM d, yyyy h:mm a")}
+                {format(event.startsAt, "MMM d, yyyy h:mm a")} -{" "}
+                {format(event.endsAt, "MMM d, yyyy h:mm a")}
               </span>
             </div>
           </div>
-          {event.status === "Active" && (
+          {event.status === "ACTIVE" && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">Cancel Event</Button>
@@ -227,15 +222,15 @@ export const EventDetails = () => {
                 <div>
                   <h4 className="font-medium mb-1">Start Date & Time</h4>
                   <p className="text-muted-foreground">
-                    {format(event.startDate, "MMMM d, yyyy")} at{" "}
-                    {format(event.startDate, "h:mm a")}
+                    {format(event.startsAt, "MMMM d, yyyy")} at{" "}
+                    {format(event.startsAt, "h:mm a")}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">End Date & Time</h4>
                   <p className="text-muted-foreground">
-                    {format(event.endDate, "MMMM d, yyyy")} at{" "}
-                    {format(event.endDate, "h:mm a")}
+                    {format(event.endsAt, "MMMM d, yyyy")} at{" "}
+                    {format(event.endsAt, "h:mm a")}
                   </p>
                 </div>
               </div>
@@ -279,12 +274,12 @@ export const EventDetails = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="saleStartDate">Sale Start Date *</Label>
+                      <Label htmlFor="saleStartsAt">Sale Start Date *</Label>
                       <Input
-                        id="saleStartDate"
+                        id="saleStartsAt"
                         type="date"
-                        value={saleStartDate}
-                        onChange={e => setSaleStartDate(e.target.value)}
+                        value={saleStartsAt}
+                        onChange={e => setSaleStartsAt(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -299,12 +294,12 @@ export const EventDetails = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="saleEndDate">Sale End Date *</Label>
+                      <Label htmlFor="saleEndsAt">Sale End Date *</Label>
                       <Input
-                        id="saleEndDate"
+                        id="saleEndsAt"
                         type="date"
-                        value={saleEndDate}
-                        onChange={e => setSaleEndDate(e.target.value)}
+                        value={saleEndsAt}
+                        onChange={e => setsaleEndsAt(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -405,7 +400,7 @@ export const EventDetails = () => {
                             Sale Start:
                           </span>
                           <p className="font-medium">
-                            {format(ticket.saleStartDate, "MMM d, yyyy h:mm a")}
+                            {format(ticket.saleStartsAt, "MMM d, yyyy h:mm a")}
                           </p>
                         </div>
                         <div>
@@ -413,7 +408,7 @@ export const EventDetails = () => {
                             Sale End:
                           </span>
                           <p className="font-medium">
-                            {format(ticket.saleEndDate, "MMM d, yyyy h:mm a")}
+                            {format(ticket.saleEndsAt, "MMM d, yyyy h:mm a")}
                           </p>
                         </div>
                       </div>

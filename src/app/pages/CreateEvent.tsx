@@ -1,9 +1,9 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useEvent } from "../hook/useEvent";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useApp } from "../context/AppContext";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import {
@@ -16,7 +16,7 @@ import {
 
 export const CreateEvent = () => {
   const navigate = useNavigate();
-  const { createEvent } = useApp();
+  const { createEvent } = useEvent();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -50,8 +50,8 @@ export const CreateEvent = () => {
     createEvent({
       title,
       description,
-      startDate: start,
-      endDate: end,
+      startsAt: start,
+      endsAt: end,
     });
 
     toast.success("Event created successfully!");
