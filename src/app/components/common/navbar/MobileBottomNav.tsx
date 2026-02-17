@@ -1,7 +1,7 @@
-import { Link, useLocation } from 'react-router';
-import { Home, ShoppingCart, User } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { useApp } from '../context/AppContext';
+import { Badge } from "../../ui/badge";
+import { Link, useLocation } from "react-router";
+import { useApp } from "../../../context/AppContext";
+import { Home, ShoppingCart, User } from "lucide-react";
 
 export const MobileBottomNav = () => {
   const location = useLocation();
@@ -17,7 +17,7 @@ export const MobileBottomNav = () => {
         <Link
           to="/dashboard"
           className={`flex flex-col items-center gap-1 flex-1 ${
-            isActive('/dashboard') ? 'text-primary' : 'text-muted-foreground'
+            isActive("/dashboard") ? "text-primary" : "text-muted-foreground"
           }`}
         >
           <Home className="w-5 h-5" />
@@ -27,14 +27,14 @@ export const MobileBottomNav = () => {
         <Link
           to="/cart"
           className={`flex flex-col items-center gap-1 flex-1 relative ${
-            isActive('/cart') ? 'text-primary' : 'text-muted-foreground'
+            isActive("/cart") ? "text-primary" : "text-muted-foreground"
           }`}
         >
           <div className="relative">
             <ShoppingCart className="w-5 h-5" />
             {cart.length > 0 && (
-              <Badge 
-                variant="destructive" 
+              <Badge
+                variant="destructive"
                 className="absolute -top-2 -right-2 h-4 w-4 flex items-center justify-center p-0 text-xs"
               >
                 {cart.length}
@@ -47,7 +47,7 @@ export const MobileBottomNav = () => {
         <Link
           to="/dashboard"
           className={`flex flex-col items-center gap-1 flex-1 ${
-            isActive('/profile') ? 'text-primary' : 'text-muted-foreground'
+            isActive("/profile") ? "text-primary" : "text-muted-foreground"
           }`}
         >
           <User className="w-5 h-5" />
