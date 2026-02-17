@@ -2,7 +2,7 @@ import { useState } from "react";
 import { User } from "../context/type";
 import { AuthContext } from "../context";
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string) => {
@@ -33,5 +33,3 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;
