@@ -52,6 +52,7 @@ export const LoginPresenter = ({
                   onChange={onChange(item.id)}
                   placeholder={item.placeholder}
                   value={form[item.id as keyof typeof form]}
+                  error={errors[item.id as keyof typeof errors]}
                 />
               ))}
               <Button type="submit" className="w-full">
