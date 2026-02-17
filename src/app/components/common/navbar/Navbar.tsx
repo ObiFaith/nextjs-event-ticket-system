@@ -7,8 +7,8 @@ import { getInitials } from "../../../../utils";
 import { useAuth } from "../../../hook/useAuth";
 import { Link, useNavigate } from "react-router";
 import { useApp } from "../../../context/AppContext";
-import {LazyDropdownContent} from "./LazyDropdownContent";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
+import { DropdownMenuContent } from "./DropdownMenuContent";
 import { DropdownMenu, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 
 export const Navbar = () => {
@@ -42,25 +42,21 @@ export const Navbar = () => {
                 )}
               </Button>
             </Link>
-
             <DropdownMenu>
               <DropdownMenuTrigger className="cursor-pointer">
-                <Button
-                  variant="ghost"
-                  className="relative h-10 w-10 rounded-full"
-                >
+                <div className="relative h-10 w-10 rounded-full">
                   <Avatar>
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-primary text-primary-foreground">
                       {user ? getInitials(user.name) : "U"}
                     </AvatarFallback>
                   </Avatar>
-                </Button>
+                </div>
               </DropdownMenuTrigger>
               <Suspense fallback={<div>Loading...</div>}>
-                <LazyDropdownContent
+                <DropdownMenuContent
                   user={user}
-                  onLogout={handleLogout}
                   navigate={navigate}
+                  onLogout={handleLogout}
                 />
               </Suspense>
             </DropdownMenu>
