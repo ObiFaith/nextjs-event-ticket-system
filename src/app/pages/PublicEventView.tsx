@@ -1,14 +1,19 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
-import { useApp } from '../context/AppContext';
-import { Navigation } from '../components/Navigation';
-import { MobileBottomNav } from '../components/MobileBottomNav';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Calendar, MapPin, Minus, Plus, Ticket } from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'sonner';
+import { toast } from "sonner";
+import { useState } from "react";
+import { format } from "date-fns";
+import { Badge } from "../components/ui/badge";
+import { useApp } from "../context/AppContext";
+import { Button } from "../components/ui/button";
+import { useNavigate, useParams } from "react-router";
+import { Calendar, Minus, Plus, Ticket } from "lucide-react";
+import { MobileBottomNav, Navbar } from "../components/common/navbar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 
 export const PublicEventView = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -22,11 +27,13 @@ export const PublicEventView = () => {
   if (!event) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-semibold mb-2">Event not found</h1>
-            <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
+            <Button onClick={() => navigate("/dashboard")}>
+              Back to Dashboard
+            </Button>
           </div>
         </div>
       </div>
@@ -42,13 +49,13 @@ export const PublicEventView = () => {
   const handleAddToCart = (ticketType: any) => {
     const quantity = quantities[ticketType.id] || 0;
     if (quantity === 0) {
-      toast.error('Please select a quantity');
+      toast.error("Please select a quantity");
       return;
     }
 
     const available = ticketType.totalQuantity - ticketType.reservedQuantity;
     if (quantity > available) {
-      toast.error('Not enough tickets available');
+      toast.error("Not enough tickets available");
       return;
     }
 
@@ -67,18 +74,20 @@ export const PublicEventView = () => {
   const isTicketAvailable = (ticket: any) => {
     const now = new Date();
     const available = ticket.totalQuantity - ticket.reservedQuantity;
-    
-    if (now < ticket.saleStartDate) return { available: false, reason: 'Sale not started' };
-    if (now > ticket.saleEndDate) return { available: false, reason: 'Sale ended' };
-    if (available <= 0) return { available: false, reason: 'Sold out' };
-    
-    return { available: true, reason: '' };
+
+    if (now < ticket.saleStartDate)
+      return { available: false, reason: "Sale not started" };
+    if (now > ticket.saleEndDate)
+      return { available: false, reason: "Sale ended" };
+    if (available <= 0) return { available: false, reason: "Sold out" };
+
+    return { available: true, reason: "" };
   };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
-      <Navigation />
-      
+      <Navbar />
+
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-lg mb-8">
@@ -94,13 +103,15 @@ export const PublicEventView = () => {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5" />
                     <span>
-                      {format(event.startDate, 'EEEE, MMMM d, yyyy')} at {format(event.startDate, 'h:mm a')}
+                      {format(event.startDate, "EEEE, MMMM d, yyyy")} at{" "}
+                      {format(event.startDate, "h:mm a")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5" />
                     <span>
-                      Ends {format(event.endDate, 'EEEE, MMMM d, yyyy')} at {format(event.endDate, 'h:mm a')}
+                      Ends {format(event.endDate, "EEEE, MMMM d, yyyy")} at{" "}
+                      {format(event.endDate, "h:mm a")}
                     </span>
                   </div>
                 </div>
@@ -109,7 +120,9 @@ export const PublicEventView = () => {
             <CardContent>
               <div className="space-y-2">
                 <h3 className="font-semibold">About this event</h3>
-                <p className="text-muted-foreground leading-relaxed">{event.description}</p>
+                <p className="text-muted-foreground leading-relaxed">
+                  {event.description}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -121,34 +134,49 @@ export const PublicEventView = () => {
                 <Card className="shadow-sm">
                   <CardContent className="flex flex-col items-center justify-center py-12">
                     <Ticket className="w-12 h-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No tickets available yet</p>
+                    <p className="text-muted-foreground">
+                      No tickets available yet
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
                 <div className="space-y-4">
-                  {ticketTypes.map((ticket) => {
+                  {ticketTypes.map(ticket => {
                     const { available, reason } = isTicketAvailable(ticket);
-                    const availableCount = ticket.totalQuantity - ticket.reservedQuantity;
+                    const availableCount =
+                      ticket.totalQuantity - ticket.reservedQuantity;
                     const quantity = quantities[ticket.id] || 0;
 
                     return (
-                      <Card key={ticket.id} className="shadow-sm hover:shadow-md transition-shadow">
+                      <Card
+                        key={ticket.id}
+                        className="shadow-sm hover:shadow-md transition-shadow"
+                      >
                         <CardHeader>
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <CardTitle className="mb-2">{ticket.name}</CardTitle>
+                              <CardTitle className="mb-2">
+                                {ticket.name}
+                              </CardTitle>
                               <CardDescription>
                                 {available ? (
                                   <>
-                                    <span className="text-accent font-medium">{availableCount} tickets left</span>
+                                    <span className="text-accent font-medium">
+                                      {availableCount} tickets left
+                                    </span>
                                   </>
                                 ) : (
-                                  <span className="text-destructive font-medium">{reason}</span>
+                                  <span className="text-destructive font-medium">
+                                    {reason}
+                                  </span>
                                 )}
                               </CardDescription>
                             </div>
                             {!available && (
-                              <Badge variant="secondary" className="bg-muted text-muted-foreground">
+                              <Badge
+                                variant="secondary"
+                                className="bg-muted text-muted-foreground"
+                              >
                                 {reason}
                               </Badge>
                             )}
@@ -160,17 +188,25 @@ export const PublicEventView = () => {
                               <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => handleQuantityChange(ticket.id, -1)}
+                                onClick={() =>
+                                  handleQuantityChange(ticket.id, -1)
+                                }
                                 disabled={!available || quantity === 0}
                               >
                                 <Minus className="w-4 h-4" />
                               </Button>
-                              <span className="w-12 text-center font-medium">{quantity}</span>
+                              <span className="w-12 text-center font-medium">
+                                {quantity}
+                              </span>
                               <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => handleQuantityChange(ticket.id, 1)}
-                                disabled={!available || quantity >= availableCount}
+                                onClick={() =>
+                                  handleQuantityChange(ticket.id, 1)
+                                }
+                                disabled={
+                                  !available || quantity >= availableCount
+                                }
                               >
                                 <Plus className="w-4 h-4" />
                               </Button>
