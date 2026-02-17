@@ -6,6 +6,7 @@ import { ChangeEvent, FormEvent } from "react";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
+import { FormInput } from "../../components/common/FormInput";
 import {
   Card,
   CardContent,
@@ -45,26 +46,15 @@ export const SingupPresenter = ({
           <CardContent>
             <form onSubmit={onSubmit} className="space-y-4">
               {SignupForm.map(item => (
-                <div key={item.id} className="space-y-2">
-                  <Label htmlFor={item.id}>{item.label}</Label>
-                  <Input
-                    id={item.id}
-                    type={item.type}
-                    value={form[item.id as keyof typeof form]}
-                    placeholder={item.placeholder}
-                    onChange={onChange(item.id)}
-                    className={
-                      errors[item.id as keyof typeof errors]
-                        ? "border-destructive"
-                        : ""
-                    }
-                  />
-                  {errors[item.id as keyof typeof errors] && (
-                    <p className="text-sm text-destructive">
-                      {errors[item.id as keyof typeof errors]}
-                    </p>
-                  )}
-                </div>
+                <FormInput
+                  id={item.id}
+                  key={item.id}
+                  type={item.type}
+                  label={item.label}
+                  onChange={onChange(item.id)}
+                  placeholder={item.placeholder}
+                  value={form[item.id as keyof typeof form]}
+                />
               ))}
               <Button type="submit" className="w-full">
                 Create account
