@@ -9,6 +9,7 @@ type FormInputProps = {
   placeholder?: string;
   value: string;
   error?: string;
+  className?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -21,9 +22,10 @@ export const FormInput = memo(
     value,
     error,
     onChange,
+    className = "",
   }: FormInputProps) => {
     return (
-      <div className="space-y-2">
+      <div className={`space-y-2 ${className}`}>
         <Label htmlFor={id}>{label}</Label>
         <Input
           id={id}

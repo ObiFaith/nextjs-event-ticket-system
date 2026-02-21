@@ -1,11 +1,13 @@
 import { toast } from "sonner";
-import { useState } from "react";
+import { EventForm } from "../form";
+import { useEventActions } from "../hook";
 import { useNavigate } from "react-router";
-import { useEvent } from "../hook/useEvent";
+import { useCallback, useState } from "react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
+import { FormInput } from "../components/common/FormInput";
 import {
   Card,
   CardContent,
@@ -16,16 +18,35 @@ import {
 
 export const CreateEvent = () => {
   const navigate = useNavigate();
-  const { createEvent } = useEvent();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const { createEvent } = useEventActions();
+  const [eventForm, setEventForm] = useState({
+    title: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    startTime: "",
+    endTime: "",
+  });
+
+  const handleFormInput = useCallback(
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEventForm(prev => ({ ...prev, [field]: e.target.value }));
+    },
+    [],
+  );
+
+  const handleTextarea = useCallback(
+    (field: string) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setEventForm(prev => ({ ...prev, [field]: e.target.value }));
+    },
+    [],
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(eventForm);
+    const { title, description, startDate, endDate, startTime, endTime } =
+      eventForm;
 
     if (
       !title ||
@@ -75,72 +96,35 @@ export const CreateEvent = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Event Title *</Label>
-              <Input
-                id="title"
-                placeholder="Enter event title"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Event Description *</Label>
-              <Textarea
-                id="description"
-                placeholder="Describe your event"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                rows={4}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startDate">Start Date *</Label>
-                <Input
-                  id="startDate"
-                  type="date"
-                  value={startDate}
-                  onChange={e => setStartDate(e.target.value)}
+          <form
+            onSubmit={handleSubmit}
+            className="grid md:grid-cols-2 gap-x-4 space-y-6"
+          >
+            {EventForm.map(field =>
+              field.type !== "textarea" ? (
+                <FormInput
+                  id={field.id}
+                  key={field.id}
+                  type={field.type}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  onChange={handleFormInput(field.id)}
+                  value={eventForm[field.id as keyof typeof eventForm]}
+                  className={field.id === "title" ? "col-span-2" : ""}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="startTime">Start Time *</Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={startTime}
-                  onChange={e => setStartTime(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="endDate">End Date *</Label>
-                <Input
-                  id="endDate"
-                  type="date"
-                  value={endDate}
-                  onChange={e => setEndDate(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="endTime">End Time *</Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={endTime}
-                  onChange={e => setEndTime(e.target.value)}
-                />
-              </div>
-            </div>
-
+              ) : (
+                <div className="col-span-2 space-y-2">
+                  <Label htmlFor="description">{field.label}</Label>
+                  <Textarea
+                    rows={4}
+                    id={field.id}
+                    placeholder={field.placeholder}
+                    onChange={handleTextarea(field.id)}
+                    value={eventForm[field.id as keyof typeof eventForm]}
+                  />
+                </div>
+              ),
+            )}
             <div className="flex gap-3 pt-4">
               <Button
                 type="button"

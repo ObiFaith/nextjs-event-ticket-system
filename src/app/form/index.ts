@@ -17,7 +17,7 @@ export const SignupForm = [
   {
     id: "name",
     type: "text",
-    label: 'Full Name',
+    label: "Full Name",
     placeholder: "John Doe",
   },
   ...LoginForm,
@@ -26,5 +26,40 @@ export const SignupForm = [
     type: "password",
     label: "Confirm Password",
     placeholder: "••••••••",
+  },
+];
+
+export const EventForm = [
+  {
+    id: "title",
+    type: "text",
+    label: "Event Title *",
+    placeholder: "Enter event title",
+  },
+  {
+    id: "description",
+    type: "textarea",
+    label: "Event Description *",
+    placeholder: "Describe your event",
+  },
+  {
+    id: "startDate",
+    type: "date",
+    label: "Start Date *",
+  },
+  {
+    id: "startTime",
+    type: "time",
+    label: "Start Time *",
+  },
+  {
+    id: "endDate",
+    type: "date",
+    label: "End Date *",
+  },
+  {
+    id: "endTime",
+    type: "time",
+    label: "End Time *",
   },
 ];

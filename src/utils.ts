@@ -18,3 +18,6 @@ export const getStatusColor = (status: string) => {
       return "bg-secondary text-secondary-foreground";
   }
 };
+
+export const parseDateTime = (date: string, time: string) =>
+  new Date(`${date}T${time}`);

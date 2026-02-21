@@ -2,7 +2,7 @@ import { Cart } from "./pages/Cart";
 import { Root } from "./pages/Root";
 import { NotFound } from "./pages/NotFound";
 import { Dashboard } from "./pages/Dashboard";
-import { CreateEvent } from "./pages/CreateEvent";
+import { EventContainer } from "./pages/events";
 import { createBrowserRouter } from "react-router";
 import { EventDetails } from "./pages/EventDetails";
 import { DashboardLayout, EventLayout } from "./layout";
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
             Component: EventLayout,
             children: [
               { path: "dashboard", Component: Dashboard },
-              { path: "create-event", Component: CreateEvent },
+              { path: "create-event", Component: EventContainer },
               { path: "events/:eventId", Component: EventDetails },
               { path: "events/:eventId/public", Component: PublicEventView },
             ],
