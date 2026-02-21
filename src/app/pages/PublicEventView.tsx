@@ -1,13 +1,12 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useEvent } from "../hook/useEvent";
+import { useEventActions } from "../hook";
 import { Badge } from "../components/ui/badge";
 import { useApp } from "../context/AppContext";
 import { Button } from "../components/ui/button";
 import { useNavigate, useParams } from "react-router";
 import { Calendar, Minus, Plus, Ticket } from "lucide-react";
-import { MobileBottomNav, Navbar } from "../components/common/navbar";
 import {
   Card,
   CardContent,
@@ -19,7 +18,7 @@ import {
 export const PublicEventView = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { getEventById } = useEvent();
+  const { getEventById } = useEventActions();
   const { getTicketTypesByEvent, addToCart } = useApp();
   const event = getEventById(eventId!);
   const ticketTypes = getTicketTypesByEvent(eventId!);

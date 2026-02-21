@@ -1,7 +1,7 @@
 import { Event } from "../context/type";
 import { mockEvents } from "./constant";
-import { EventContext } from "../context";
 import { useCallback, useMemo, useState } from "react";
+import { EventActionsContext, EventStateContext } from "../context";
 
 export const EventProvider = ({ children }: { children: React.ReactNode }) => {
   const [events, setEvents] = useState<Array<Event>>(mockEvents);
@@ -28,12 +28,16 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     [events],
   );
 
-  const value = useMemo(
-    () => ({ events, createEvent, cancelEvent, getEventById }),
-    [events, createEvent, cancelEvent, getEventById],
+  const actions = useMemo(
+    () => ({ createEvent, cancelEvent, getEventById }),
+    [createEvent, cancelEvent, getEventById],
   );
 
   return (
-    <EventContext.Provider value={value}>{children}</EventContext.Provider>
+    <EventStateContext.Provider value={events}>
+      <EventActionsContext.Provider value={actions}>
+        {children}
+      </EventActionsContext.Provider>
+    </EventStateContext.Provider>
   );
 };

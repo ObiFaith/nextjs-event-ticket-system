@@ -1,7 +1,18 @@
 import { createContext } from "react";
-import { AuthContextType, EventContextType } from "./type";
+import { AuthActions, Event, EventActions, User } from "./type";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const EventContext = createContext<EventContextType | undefined>(undefined);
+export const AuthStateContext = createContext<User | null | undefined>(
+  undefined,
+);
 
-export { AuthContext, EventContext };
+export const AuthActionsContext = createContext<AuthActions | undefined>(
+  undefined,
+);
+
+export const EventStateContext = createContext<Array<Event> | null | undefined>(
+  undefined,
+);
+
+export const EventActionsContext = createContext<EventActions | undefined>(
+  undefined,
+);

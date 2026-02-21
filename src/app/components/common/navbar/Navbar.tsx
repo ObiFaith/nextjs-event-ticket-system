@@ -4,16 +4,17 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { ShoppingCart } from "lucide-react";
 import { getInitials } from "../../../../utils";
-import { useAuth } from "../../../hook/useAuth";
 import { Link, useNavigate } from "react-router";
 import { useApp } from "../../../context/AppContext";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { DropdownMenuContent } from "./DropdownMenuContent";
+import { useAuthActions, useAuthState } from "../../../hook";
 import { DropdownMenu, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 
 export const Navbar = () => {
-  const { user, logout } = useAuth();
+  const user = useAuthState();
   const { cart } = useApp();
+  const { logout } = useAuthActions();
   const navigate = useNavigate();
 
   const handleLogout = () => {

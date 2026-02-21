@@ -3,8 +3,6 @@ import { Link } from "react-router";
 import { LoginForm } from "../../form";
 import { Logo } from "../../components/Logo";
 import { ChangeEvent, FormEvent } from "react";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { FormInput } from "../../components/common/FormInput";
 import {

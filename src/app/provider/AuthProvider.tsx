@@ -1,33 +1,43 @@
 import { User } from "../context/type";
-import { AuthContext } from "../context";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { AuthActionsContext, AuthStateContext } from "../context";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (email: string, password: string) => {
+  const login = useCallback((email: string, password: string) => {
     // Mock login
     setUser({
       id: "1",
       name: "John Doe",
       email: email,
     });
-  };
+  }, []);
 
-  const signup = (name: string, email: string, password: string) => {
-    // Mock signup
-    setUser({
-      id: "1",
-      name: name,
-      email: email,
-    });
-  };
+  const signup = useCallback(
+    (name: string, email: string, password: string) => {
+      // Mock signup
+      setUser({
+        id: "1",
+        name: name,
+        email: email,
+      });
+    },
+    [],
+  );
 
-  const logout = () => {
-    setUser(null);
-  };
+  const logout = useCallback(() => setUser(null), []);
 
-  const value = useMemo(() => ({ user, login, signup, logout }), [user]);
+  const actions = useMemo(
+    () => ({ login, signup, logout }),
+    [login, signup, logout],
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthStateContext.Provider value={user}>
+      <AuthActionsContext.Provider value={actions}>
+        {children}
+      </AuthActionsContext.Provider>
+    </AuthStateContext.Provider>
+  );
 };

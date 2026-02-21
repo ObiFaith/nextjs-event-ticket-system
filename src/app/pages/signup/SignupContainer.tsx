@@ -1,13 +1,13 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import { FormType } from "./type";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../hook/useAuth";
+import { useAuthActions } from "../../hook";
+import { useCallback, useState } from "react";
 import { SingupPresenter } from "./SignupPresenter";
 
 export const SignupContainer = () => {
   const navigate = useNavigate();
-  const { signup } = useAuth();
+  const { signup } = useAuthActions();
 
   const [form, setForm] = useState<FormType>({
     name: "",
@@ -17,11 +17,13 @@ export const SignupContainer = () => {
   });
   const [errors, setErrors] = useState<Partial<FormType>>({});
 
-  const handleForm =
+  const handleForm = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setForm(prev => ({ ...prev, [field]: e.target.value }));
       setErrors(prev => ({ ...prev, [field]: undefined }));
-    };
+    },
+    [],
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

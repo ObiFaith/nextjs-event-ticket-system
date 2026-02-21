@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useEvent } from "../hook/useEvent";
+import { useEventActions } from "../hook";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -46,7 +46,7 @@ import {
 export const EventDetails = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { getEventById, cancelEvent } = useEvent();
+  const { getEventById, cancelEvent } = useEventActions();
   const { getTicketTypesByEvent, addTicketType, deleteTicketType } = useApp();
   const event = getEventById(eventId!);
   const ticketTypes = getTicketTypesByEvent(eventId!);

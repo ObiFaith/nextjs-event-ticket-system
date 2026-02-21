@@ -14,15 +14,13 @@ export interface Event {
   // ticketTypes?: Array<TicketTypes>
 }
 
-export type AuthContextType = {
-  user: User | null;
+export type AuthActions = {
   login: (email: string, password: string) => void;
   signup: (name: string, email: string, password: string) => void;
   logout: () => void;
 };
 
-export type EventContextType = {
-  events: Array<Event>;
+export type EventActions = {
   createEvent: (event: Omit<Event, "id" | "status">) => void;
   cancelEvent: (eventId: string) => void;
   getEventById: (id: string) => Event | undefined;
