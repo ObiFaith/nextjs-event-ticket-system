@@ -1,3 +1,4 @@
+export * from "./EventDetails";
 export * from "./components/EventCard";
 export * from "./components/EventList";
 export * from "./components/EmptyEvent";

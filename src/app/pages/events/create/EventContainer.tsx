@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { EventFormType } from "./type";
+import { EventFormType } from "../type";
 import { useNavigate } from "react-router";
 import { useCallback, useState } from "react";
 import { useEventActions } from "../../../hook";

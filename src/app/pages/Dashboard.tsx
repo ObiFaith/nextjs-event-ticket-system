@@ -26,7 +26,7 @@ export const Dashboard = () => {
         </div>
         <Button
           onClick={() => navigate("/create-event")}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Create Event

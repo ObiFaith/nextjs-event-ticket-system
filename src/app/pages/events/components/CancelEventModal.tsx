@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { memo, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useEventActions } from "../../../hook";
 import { Button } from "../../../components/ui/button";
@@ -18,16 +19,18 @@ const CancelEventModal = ({ eventId }: { eventId: string }) => {
   const navigate = useNavigate();
   const { cancelEvent } = useEventActions();
 
-  const handleCancelEvent = () => {
+  const handleCancelEvent = useCallback(() => {
     cancelEvent(eventId);
     toast.success("Event cancelled successfully");
     navigate("/dashboard");
-  };
+  }, [cancelEvent, eventId, navigate]);
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Cancel Event</Button>
+        <Button className="cursor-pointer" variant="destructive">
+          Cancel Event
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -48,4 +51,4 @@ const CancelEventModal = ({ eventId }: { eventId: string }) => {
   );
 };
 
-export default CancelEventModal;
+export default memo(CancelEventModal);

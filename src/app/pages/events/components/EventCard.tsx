@@ -48,7 +48,7 @@ export const EventCard = memo(({ event }: { event: Event }) => {
             {format(event.endsAt, "MMM d, yyyy")}
           </span>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 *:cursor-pointer">
           <Button variant="outline" className="flex-1" onClick={goPublic}>
             View
           </Button>

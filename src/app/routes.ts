@@ -4,9 +4,9 @@ import { NotFound } from "./pages/NotFound";
 import { Dashboard } from "./pages/Dashboard";
 import { EventContainer } from "./pages/events";
 import { createBrowserRouter } from "react-router";
-import { EventDetails } from "./pages/EventDetails";
 import { DashboardLayout, EventLayout } from "./layout";
 import { PublicEventView } from "./pages/PublicEventView";
+import { EventDetails } from "./pages/events/EventDetails";
 import { LoginContainer } from "./pages/login/LoginContainer";
 import { SignupContainer } from "./pages/signup/SignupContainer";
 

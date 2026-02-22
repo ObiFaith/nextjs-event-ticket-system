@@ -1,4 +1,4 @@
-import { EventFormType } from "./type";
+import { EventFormType } from "../type";
 import { EventForm } from "../../../form";
 import { ChangeEvent, FormEvent } from "react";
 import { Label } from "../../../components/ui/label";
