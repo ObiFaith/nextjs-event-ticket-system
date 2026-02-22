@@ -63,3 +63,38 @@ export const EventForm = [
     label: "End Time *",
   },
 ];
+
+export const TicketTypeForm = [
+  {
+    id: "ticketName",
+    type: "text",
+    label: "Ticket Name *",
+    placeholder: "e.g. Regular, VIP",
+  },
+  {
+    id: "quantity",
+    type: "number",
+    label: "Total Quantity *",
+    placeholder: "100",
+  },
+  {
+    id: "saleStartDate",
+    type: "date",
+    label: "Sale Start Date *",
+  },
+  {
+    id: "saleStartTime",
+    type: "time",
+    label: "Sale Start Time *",
+  },
+  {
+    id: "saleEndDate",
+    type: "date",
+    label: "Sale End Date *",
+  },
+  {
+    id: "saleEndTime",
+    type: "time",
+    label: "Sale End Time *",
+  },
+];
