@@ -30,7 +30,7 @@ export const EventContainer = () => {
     navigate("/dashboard");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     const { startDate, startTime, endDate, endTime } = eventForm;
     const emptyField = Object.entries(eventForm).find(([_, value]) => !value);
@@ -55,7 +55,7 @@ export const EventContainer = () => {
 
     toast.success("Event created successfully!");
     navigate("/dashboard");
-  };
+  }, [eventForm, createEvent, navigate]);
 
   return (
     <EventPresenter

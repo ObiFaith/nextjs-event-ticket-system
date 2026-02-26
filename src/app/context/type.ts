@@ -1,7 +1,8 @@
 export interface User {
   id: string;
-  name: string;
   email: string;
+  lastName: string;
+  firstName: string;
 }
 
 export interface Event {
@@ -15,8 +16,8 @@ export interface Event {
 }
 
 export type AuthActions = {
-  login: (email: string, password: string) => void;
-  signup: (name: string, email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<string>;
+  signup: (lastName: string, firstName: string, email: string, password: string) => Promise<string>;
   logout: () => void;
 };
 

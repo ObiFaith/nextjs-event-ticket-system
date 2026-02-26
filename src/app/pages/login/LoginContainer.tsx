@@ -5,6 +5,7 @@ import { useAuthActions } from "../../hook";
 import { useCallback, useState } from "react";
 import { LoginPresenter } from "./LoginPresenter";
 
+
 export const LoginContainer = () => {
   const navigate = useNavigate();
   const { login } = useAuthActions();
@@ -17,14 +18,14 @@ export const LoginContainer = () => {
 
   const handleForm = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm(prev => ({ ...prev, [field]: e.target.value }));
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     },
     [],
   );
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
       // Validation
@@ -36,9 +37,8 @@ export const LoginContainer = () => {
         setErrors(newErrors);
         return;
       }
-
-      login(form.email, form.password);
-      toast.success("Logged in successfully!");
+      const message = await login(form.email, form.password);
+      toast.success(message || "Logged in successfully!");
       navigate("/dashboard");
     },
     [form, login, navigate],

@@ -10,7 +10,8 @@ export const SignupContainer = () => {
   const { signup } = useAuthActions();
 
   const [form, setForm] = useState<FormType>({
-    name: "",
+    firstName: "",
+    lastName: "",
     password: "",
     email: "",
     confirmPassword: "",
@@ -19,8 +20,8 @@ export const SignupContainer = () => {
 
   const handleForm = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm(prev => ({ ...prev, [field]: e.target.value }));
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     },
     [],
   );
@@ -29,10 +30,11 @@ export const SignupContainer = () => {
     e.preventDefault();
 
     // Validation
-    const { name, email, password, confirmPassword } = form;
+    const { lastName, firstName, email, password, confirmPassword } = form;
     const newErrors: Partial<FormType> = Object.fromEntries(
       [
-        !name && ["name", "Name is required"],
+        !lastName && ["lastName", "Last Name is required"],
+        !firstName && ["firstName", "First Name is required"],
         !email && ["email", "Email is required"],
         !password && ["password", "Password is required"],
         !confirmPassword && ["confirmPassword", "Please confirm your password"],
@@ -50,7 +52,7 @@ export const SignupContainer = () => {
       return;
     }
 
-    signup(name, email, password);
+    signup(lastName, firstName, email, password);
     toast.success("Account created successfully!");
     navigate("/dashboard");
   };
