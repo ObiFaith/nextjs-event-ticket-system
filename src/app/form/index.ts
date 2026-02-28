@@ -15,10 +15,16 @@ export const LoginForm = [
 
 export const SignupForm = [
   {
-    id: "name",
+    id: "firstName",
     type: "text",
-    label: "Full Name",
-    placeholder: "John Doe",
+    label: "First Name",
+    placeholder: "John",
+  },
+  {
+    id: "lastName",
+    type: "text",
+    label: "Last Name",
+    placeholder: "Doe",
   },
   ...LoginForm,
   {

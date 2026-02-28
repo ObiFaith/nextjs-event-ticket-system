@@ -20,42 +20,57 @@ export const SignupContainer = () => {
 
   const handleForm = useCallback(
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      setForm(prev => ({ ...prev, [field]: e.target.value }));
+      setErrors(prev => ({ ...prev, [field]: undefined }));
     },
     [],
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    // Validation
-    const { lastName, firstName, email, password, confirmPassword } = form;
-    const newErrors: Partial<FormType> = Object.fromEntries(
-      [
-        !lastName && ["lastName", "Last Name is required"],
-        !firstName && ["firstName", "First Name is required"],
-        !email && ["email", "Email is required"],
-        !password && ["password", "Password is required"],
-        !confirmPassword && ["confirmPassword", "Please confirm your password"],
-        password &&
-          confirmPassword &&
-          password !== confirmPassword && [
+      // Validation
+      const { lastName, firstName, email, password, confirmPassword } = form;
+      const newErrors: Partial<FormType> = Object.fromEntries(
+        [
+          !lastName && ["lastName", "Last Name is required"],
+          !firstName && ["firstName", "First Name is required"],
+          !email && ["email", "Email is required"],
+          !password && ["password", "Password is required"],
+          !confirmPassword && [
             "confirmPassword",
-            "Passwords do not match",
+            "Please confirm your password",
           ],
-      ].filter(Boolean) as [keyof typeof errors, string][],
-    );
+          password &&
+            confirmPassword &&
+            password !== confirmPassword && [
+              "confirmPassword",
+              "Passwords do not match",
+            ],
+        ].filter(Boolean) as [keyof typeof errors, string][],
+      );
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
 
-    signup(lastName, firstName, email, password);
-    toast.success("Account created successfully!");
-    navigate("/dashboard");
-  };
+      try {
+        const message = await signup(lastName, firstName, email, password);
+        toast.success(message);
+        navigate("/dashboard");
+      } catch (error: any) {
+        const backendMessage = error?.response?.data?.message;
+        const errorMessage = Array.isArray(backendMessage)
+          ? backendMessage[0]
+          : backendMessage;
+
+        toast.error(errorMessage || "Signup failed");
+      }
+    },
+    [form, signup, navigate],
+  );
 
   return (
     <SingupPresenter

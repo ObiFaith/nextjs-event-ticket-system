@@ -48,7 +48,7 @@ export const Navbar = () => {
                 <div className="relative h-10 w-10 rounded-full">
                   <Avatar>
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      {user ? getInitials(user.name) : "U"}
+                      {user ? getInitials(user.firstName) : "U"}
                     </AvatarFallback>
                   </Avatar>
                 </div>

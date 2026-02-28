@@ -3,21 +3,18 @@ import { User } from "../context/type";
 import { useCallback, useMemo, useState } from "react";
 import { AuthActionsContext, AuthStateContext } from "../context";
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [user, setUser] = useState<User | null>(null);
 
   const login = useCallback(async (email: string, password: string) => {
-    try {
-      const { data } = await axios.post(`http://localhost:3000/auth/login`, {
-        email,
-        password,
-      });
-      setUser(data.user);
-      return data.message;
-    } catch (error) {
-      console.log("Error while logging user:", error?.message);
-    }
+    const { data } = await axios.post(`${apiUrl}/auth/login`, {
+      email,
+      password,
+    });
+    setUser(data.user);
+    return data.message;
   }, []);
 
   const signup = useCallback(
@@ -27,7 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email: string,
       password: string,
     ) => {
-      const { data } = await axios.post(`http://localhost:3000/auth/register`, {
+      const { data } = await axios.post(`${apiUrl}/auth/register`, {
         firstName,
         lastName,
         email,
