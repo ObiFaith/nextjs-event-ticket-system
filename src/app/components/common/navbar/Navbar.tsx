@@ -3,19 +3,18 @@ import { Logo } from "../../Logo";
 import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { ShoppingCart } from "lucide-react";
+import { User } from "../../../context/type";
 import { getInitials } from "../../../../utils";
 import { Link, useNavigate } from "react-router";
-import { useApp } from "../../../context/AppContext";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { DropdownMenuContent } from "./DropdownMenuContent";
-import { useAuthActions, useAuthState } from "../../../hook";
+import { useAuthActions, useCartState } from "../../../hook";
 import { DropdownMenu, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 
-export const Navbar = () => {
-  const user = useAuthState();
-  const { cart } = useApp();
-  const { logout } = useAuthActions();
+export const Navbar = ({ user }: { user: User }) => {
   const navigate = useNavigate();
+  const { cart } = useCartState();
+  const { logout } = useAuthActions();
 
   const handleLogout = () => {
     logout();
@@ -48,7 +47,9 @@ export const Navbar = () => {
                 <div className="relative h-10 w-10 rounded-full">
                   <Avatar>
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      {user ? getInitials(user.firstName) : "U"}
+                      {user
+                        ? getInitials(user.firstName + " " + user.lastName)
+                        : "U"}
                     </AvatarFallback>
                   </Avatar>
                 </div>

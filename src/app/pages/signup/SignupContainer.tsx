@@ -56,18 +56,9 @@ export const SignupContainer = () => {
         return;
       }
 
-      try {
-        const message = await signup(lastName, firstName, email, password);
-        toast.success(message);
-        navigate("/dashboard");
-      } catch (error: any) {
-        const backendMessage = error?.response?.data?.message;
-        const errorMessage = Array.isArray(backendMessage)
-          ? backendMessage[0]
-          : backendMessage;
-
-        toast.error(errorMessage || "Signup failed");
-      }
+      const message = await signup({ lastName, firstName, email, password });
+      toast.success(message);
+      navigate("/dashboard");
     },
     [form, signup, navigate],
   );

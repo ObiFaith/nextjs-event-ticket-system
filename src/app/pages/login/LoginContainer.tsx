@@ -37,18 +37,9 @@ export const LoginContainer = () => {
         return;
       }
 
-      try {
-        const message = await login(form.email, form.password);
-        toast.success(message);
-        navigate("/dashboard");
-      } catch (error: any) {
-        const backendMessage = error?.response?.data?.message;
-        const errorMessage = Array.isArray(backendMessage)
-          ? backendMessage[0]
-          : backendMessage;
-
-        toast.error(errorMessage || "Login failed");
-      }
+      const message = await login(form.email, form.password);
+      toast.success(message);
+      navigate("/dashboard");
     },
     [form, login, navigate],
   );

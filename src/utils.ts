@@ -6,6 +6,17 @@ export const getInitials = (name: string) => {
     .toUpperCase();
 };
 
+export const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+export const getErrorMessage = (error: any) => {
+  const backendMessage = error?.response?.data?.message;
+  const errorMessage = Array.isArray(backendMessage)
+    ? backendMessage[0]
+    : backendMessage;
+
+  return errorMessage;
+};
+
 export const getStatusColor = (status: string) => {
   switch (status) {
     case "ACTIVE":
@@ -39,5 +50,7 @@ export const getTicketStatusColor = (status: string) => {
   }
 };
 
-export const parseDateTime = (date: string, time: string) =>
-  new Date(`${date}T${time}`);
+export const parseDateTime = (date: string, time: string) => {
+  const d = new Date(`${date}T${time}`);
+  return d.toISOString();
+};

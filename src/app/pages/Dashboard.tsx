@@ -1,19 +1,12 @@
-import { useEffect } from "react";
 import { Plus } from "lucide-react";
-import { useAuthState } from "../hook";
+import { useEventState } from "../hook";
 import { useNavigate } from "react-router";
-import { useEventState  } from "../hook";
 import { Button } from "../components/ui/button";
 import { EmptyEvent, EventList } from "./events";
 
 export const Dashboard = () => {
-  const user = useAuthState();
-  const events = useEventState ();
+  const events = useEventState();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) navigate("/");
-  }, [user, navigate]);
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -24,13 +17,15 @@ export const Dashboard = () => {
             Manage your events and ticket sales
           </p>
         </div>
-        <Button
-          onClick={() => navigate("/create-event")}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Create Event
-        </Button>
+        {events.length !== 0 && (
+          <Button
+            onClick={() => navigate("/create-event")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Create Event
+          </Button>
+        )}
       </div>
       {events.length === 0 ? <EmptyEvent /> : <EventList events={events} />}
     </main>
